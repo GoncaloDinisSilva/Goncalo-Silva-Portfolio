@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Gonçalo Silva - Web Developer & Content Editor. Portfolio showcasing responsive, user-centric web experiences and projects built with React, JavaScript, HTML, and CSS." />
+  <meta name="keywords" content="web developer, content editor, portfolio, React, JavaScript, HTML, CSS" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Gonçalo Silva - Portfolio" />
+  <meta property="og:description"
+    content="Web Developer & Content Editor - Building responsive, user-centric experiences" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://goncalosilva.dev" />
+
+  <title>Gonçalo Silva - Portfolio</title>
+  <link rel="icon" type="image/png" href="../assets/img/browser_logo.png" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+  <!-- DevIcons -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+  <link rel="stylesheet" href="https://unpkg.com/@coreui/icons/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="header-left">
+      <div class="logo no-select">PORTFOLIO</div>
+      <!-- Dark/Light Mode Toggle -->
+      <button id="theme-toggle" aria-label="Toggle dark/light mode">
+        <i id="theme-icon" class="fas fa-moon"></i>
+      </button>
+      <!-- Color palette -->
+      <div class="color-palette-container">
+        <button id="color-palette-toggle" aria-label="Select accent color">
+          <i class="fas fa-palette"></i>
+        </button>
+        <div id="color-palette-menu">
+          <button class="color-swatch" data-color="#007bff" style="background-color: #007bff"
+            aria-label="Color: Blue"></button>
+          <button class="color-swatch" data-color="#e83e8c" style="background-color: #e83e8c"
+            aria-label="Color: Pink"></button>
+          <button class="color-swatch" data-color="#28a745" style="background-color: #28a745"
+            aria-label="Color: Green"></button>
+          <button class="color-swatch" data-color="#fd7e14" style="background-color: #fd7e14"
+            aria-label="Color: Orange"></button>
+        </div>
+      </div>
+      <!-- Desktop Language Switcher -->
+      <div id="lang-switcher-desktop" class="lang-switcher">
+        <span class="lang lang-pt no-select" data-lang="pt">PT</span>
+        <span class="divider"></span>
+        <span class="lang lang-en no-select" data-lang="en">EN</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <!-- Mobile Language Switcher -->
+      <div id="lang-switcher-mobile" class="lang-switcher">
+        <span class="lang lang-pt no-select" data-lang="pt">PT</span>
+        <span class="divider"></span>
+        <span class="lang lang-en no-select" data-lang="en">EN</span>
+      </div>
+
+      <!-- Hamburger -->
+      <button id="hamburger" aria-label="Toggle menu">
+        <i id="hamburger-icon" class="fas fa-bars"></i>
+      </button>
+
+      <!-- Navigation -->
+      <nav id="nav-links">
+        <a id="nav-home" href="#home" data-i18n="nav.home" class="active no-select" aria-current="page">Home</a>
+        <a id="nav-about" href="#about" data-i18n="nav.about" class="no-select">About</a>
+        <a id="nav-projects" href="#projects" data-i18n="nav.projects" class="no-select">Projects</a>
+        <a id="nav-contact" href="mailto:goncalodinis.silva22@gmail.com" data-i18n="nav.contact" class="no-select"
+          rel="noopener">Contact</a>
+      </nav>
+      <!-- Add the overlay here -->
+      <div id="menu-overlay"></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home-section">
+      <h1 class="main-title no-select">Gonçalo Silva</h1>
+      <!-- → GAMEBOY PROFILE WRAPPER ← -->
+      <div class="profile-container">
+        <div class="gameboy">
+          <div class="screen">
+            <img src="../assets/img/GS_pfp.jpg" alt="Profile" class="profile-img clean no-select-img" />
+          </div>
+          <div class="controls">
+            <div class="dpad">
+              <span class="dpad-up"></span>
+              <span class="dpad-left"></span>
+              <span class="dpad-center"></span>
+              <span class="dpad-right"></span>
+              <span class="dpad-down"></span>
+            </div>
+            <div class="action-buttons">
+              <span class="btn-a"></span>
+              <span class="btn-b"></span>
+            </div>
+            <div class="start-select">
+              <span class="btn-select"></span>
+              <span class="btn-start"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="typewriter-container">
+        <span id="typewriter" class="no-select"></span><span class="cursor"></span>
+      </div>
+    </section>
+
+    <!-- ─────────── About / Skills ─────────── -->
+    <section id="about-section" class="skills-section">
+      <!-- About Me title (styled like Projects) -->
+      <h2 class="section-title no-select" data-i18n="about.heading">About Me</h2>
+
+      <!-- Short description under the title -->
+      <p class="section-description no-select" data-i18n="about.description">
+        I'm a passionate developer who loves building interactive web
+        experiences. In my free time I experiment with animations, explore new
+        JS frameworks, and contribute to open-source projects.
+      </p>
+
+      <!-- selector tabs -->
+      <div class="slider-selector">
+        <button data-target="languages-slider" data-i18n="slider.languages" class="active no-select">
+          Languages
+        </button>
+        <button data-target="softwares-slider" data-i18n="slider.softwares" class="no-select">
+          Softwares
+        </button>
+      </div>
+
+      <!-- first slider: languages -->
+      <div id="languages-slider" class="slider-container">
+        <button class="slider-btn left" aria-label="Previous languages">‹</button>
+        <div class="slider-viewport">
+          <div class="slider-track">
+            <div class="card" aria-label="HTML - Markup Language">
+              <i class="fab fa-html5"></i><span>HTML</span>
+            </div>
+            <div class="card" aria-label="CSS - Styling Language">
+              <i class="fab fa-css3-alt"></i><span>CSS</span>
+            </div>
+            <div class="card" aria-label="JavaScript - Programming Language">
+              <i class="fab fa-js"></i><span>JavaScript</span>
+            </div>
+            <div class="card" aria-label="Magento - E-commerce Platform">
+              <i class="devicon-magento-original"></i><span>Magento</span>
+            </div>
+            <div class="card" aria-label="React - JavaScript Library">
+              <i class="fa-brands fa-react"></i><span>React</span>
+            </div>
+            <div class="card" aria-label="C - Programming Language">
+              <i class="devicon-c-plain"></i><span>C</span>
+            </div>
+            <div class="card" aria-label="C Sharp - Programming Language">
+              <i class="devicon-csharp-plain"></i><span>C#</span>
+            </div>
+            <div class="card" aria-label="SQL - Database Language">
+              <i class="devicon-azuresqldatabase-plain"></i><span>SQL</span>
+            </div>
+            <div class="card" aria-label="Shell - Command Language">
+              <i class="fa-solid fa-terminal"></i><span>Shell</span>
+            </div>
+          </div>
+        </div>
+        <button class="slider-btn right no-select" aria-label="Next languages">›</button>
+        <div class="slider-dots"></div>
+      </div>
+
+      <!-- second slider: softwares (hidden by default) -->
+      <div id="softwares-slider" class="slider-container hidden">
+        <button class="slider-btn left no-select" aria-label="Previous softwares">‹</button>
+        <div class="slider-viewport">
+          <div class="slider-track">
+            <div class="card" aria-label="Visual Studio - IDE">
+              <i class="devicon-visualstudio-plain"></i><span>Visual Studio</span>
+            </div>
+            <div class="card" aria-label="VS Code - Code Editor">
+              <i class="devicon-vscode-plain"></i><span>VS Code</span>
+            </div>
+            <div class="card" aria-label="Confluence - Documentation">
+              <i class="devicon-confluence-plain"></i><span>Confluence</span>
+            </div>
+            <div class="card" aria-label="Jira - Project Management">
+              <i class="devicon-jira-plain"></i><span>Jira</span>
+            </div>
+            <div class="card" aria-label="Figma - Design Tool">
+              <i class="devicon-figma-plain"></i><span>Figma</span>
+            </div>
+            <div class="card" aria-label="MongoDB - Database">
+              <i class="devicon-mongodb-plain"></i><span>MongoDB</span>
+            </div>
+            <div class="card" aria-label="Insomnia - API Client">
+              <i class="devicon-insomnia-plain"></i><span>Insomnia</span>
+            </div>
+            <div class="card" aria-label="Photoshop - Image Editor">
+              <i class="devicon-photoshop-plain"></i><span>Photoshop</span>
+            </div>
+            <div class="card" aria-label="Premiere Pro - Video Editor">
+              <i class="devicon-premierepro-plain"></i><span>Premiere Pro</span>
+            </div>
+          </div>
+        </div>
+        <button class="slider-btn right no-select" aria-label="Next softwares">›</button>
+        <div class="slider-dots"></div>
+      </div>
+    </section>
+
+    <!-- ─────────── Projects Section ─────────── -->
+    <section id="projects-section" class="hidden">
+      <h2 class="section-title no-select" data-i18n="projects.title">Projects</h2>
+
+      <!-- NEW: Slider Wrapper Structure -->
+      <div id="projects-slider-container" class="slider-container projects-slider">
+        <div class="slider-viewport">
+          <!-- 'slider-track' for JS, 'projects-grid' for CSS desktop grid -->
+          <div class="slider-track projects-grid">
+
+            <!-- Project 1 -->
+            <div class="project-card">
+              <a href="https://to-do-list-five-delta.vercel.app/" target="_blank" rel="noopener"
+                aria-label="To-Do List - React app with LocalStorage">
+                <!-- Wrapper for the image allows us to style it separately on mobile -->
+                <div class="img-container">
+                  <img src="../assets/img/project_one.jpeg" alt="To-Do List application screenshot" />
+                </div>
+                <div class="project-desc">
+                  <p data-i18n="projects.project-one">
+                    A simple to-do list made with React (node.js) that uses
+                    LocalStorage to save all tasks in the browser.
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card">
+              <a href="https://minefield-drinking-game.vercel.app/" target="_blank" rel="noopener"
+                aria-label="Minefield Game - Vanilla JavaScript game">
+                <div class="img-container">
+                  <img src="../assets/img/project_two.jpeg" alt="Minefield game screenshot" />
+                </div>
+                <div class="project-desc">
+                  <p data-i18n="projects.project-two">
+                    A simple minefield game to play with your friends locally! This game was developed using HTML, CSS
+                    and JavaScript.
+                  </p>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </div>
+        <!-- Dots container for mobile slider -->
+        <div class="slider-dots"></div>
+      </div>
+
+      <p class="coming-soon-text no-select" data-i18n="projects.coming-soon">More projects coming soon…</p>
+    </section>
+    <div id="pixel-overlay"></div>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <a href="https://github.com/GoncaloDinisSilva" target="_blank" rel="noopener" aria-label="GitHub profile">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+      <a href="https://www.codewars.com/users/GoncaloDinisSilva" target="_blank" rel="noopener"
+        aria-label="CodeWars profile">
+        <i class="cib-codewars" title="CodeWars"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/gon%C3%A7alodinissilva/" target="_blank" rel="noopener"
+        aria-label="LinkedIn profile">
+        <i class="fab fa-linkedin" title="LinkedIn"></i>
+      </a>
+      <!-- CV Preview Button -->
+      <button id="cv-preview-footer" aria-label="Preview CV">
+        <i class="fas fa-file" title="Preview CV"></i>
+      </button>
+    </div>
+    <div class="footer-right no-select" id="footer-text" data-i18n="footer.copy">
+      &copy; Gonçalo Silva. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- CV Preview Modal -->
+  <div id="cv-modal" class="cv-modal">
+    <div class="cv-modal-content">
+      <button id="cv-close" aria-label="Close CV preview">&times;</button>
+      <iframe id="cv-frame" src="" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <script src="../js/script.js"></script>
+</body>
+
+</html>

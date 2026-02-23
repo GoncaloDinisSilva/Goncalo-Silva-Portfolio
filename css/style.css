@@ -1,0 +1,1492 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap');
+
+/* Reset and base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  overflow: hidden; /* keep page un-scrollable */
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme variables */
+:root {
+  --bg-color: #222;
+  --text-color: #eee;
+  --line-color: #007bff;
+  --main-bg-color: #2c2c2c;
+  --toggle-bg: rgba(255, 255, 255, 0.1);
+  --toggle-bg-light: rgba(0, 0, 0, 0.1);
+  /* Light-mode Gameboy (classic grey) */
+  --gameboy-bg-light: #d4d4d4;
+  --gameboy-border-light: #8a8a8a;
+  --gameboy-shell-shadow-dark-light: #8a8a8a;
+  --gameboy-shell-shadow-light-light: #ffffff;
+  /* Dark-mode Gameboy (charcoal) */
+  --gameboy-bg-dark: #2c2c2c;
+  --gameboy-border-dark: #444444;
+  --gameboy-shell-shadow-dark-dark: #222222;
+  --gameboy-shell-shadow-light-dark: #555555;
+  /* hover shades for toggle & lang buttons */
+  --toggle-bg-hover: rgba(255, 255, 255, 0.2);
+  --toggle-bg-light-hover: rgba(0, 0, 0, 0.2);
+
+  /* Slider variables */
+  --gap-desktop: 24px;
+  --gap-mobile: 16px;
+  --margin-desktop: 80px;    /* Carousel inset from window edges */
+  --margin-mobile: 24px;     /* Mobile inset */
+  --transition-speed: 0.3s;
+
+  /* fixed desktop card size (tweak this to make cards even smaller) */
+  --card-width-desktop: 140px;
+
+  /* dot indicators */
+  --dot-size-desktop: 8px;
+  --dot-gap-desktop: 6px;
+  --dot-size-mobile: 10px;
+  --dot-gap-mobile: 8px;
+
+  /* how far the arrows sit outside the viewport */
+  --arrow-offset-desktop: 40px;
+
+  /* compute viewport width: 5 cards + 4 gaps */
+  --viewport-width: calc(
+    5 * var(--card-width-desktop)
+    + 4 * var(--gap-desktop)
+  );
+
+  --slider-bg: var(--main-bg-color);
+  --slider-btn-bg: var(--toggle-bg);
+  --slider-btn-color: var(--text-color);
+  --slider-btn-hover-bg: var(--line-color);
+  --slider-btn-hover-color: var(--bg-color);
+  --slider-dot-color: #bbb;
+  --slider-dot-active-color: var(--line-color);
+  --card-icon-size: 2rem;
+  --card-bg-dark-mode: #303030;
+  --card-bg-light-mode: #ffffff;
+
+}
+body.light-mode {
+  --bg-color: #fff;
+  --text-color: #222;
+  --line-color: #007bff;
+  --main-bg-color: #f5f5f5;
+}
+
+/* Default (dark-mode) – charcoal shell */
+body:not(.light-mode) .gameboy {
+  background: var(--gameboy-bg-dark);
+  border: 8px solid var(--gameboy-border-dark);
+  box-shadow:
+    inset -4px -4px 0 var(--gameboy-shell-shadow-dark-dark),
+    inset  4px  4px 0 var(--gameboy-shell-shadow-light-dark);
+}
+
+/* Light-mode – classic grey shell */
+body.light-mode .gameboy {
+  background: var(--gameboy-bg-light);
+  border: 8px solid var(--gameboy-border-light);
+  box-shadow:
+    inset -4px -4px 0 var(--gameboy-shell-shadow-dark-light),
+    inset  4px  4px 0 var(--gameboy-shell-shadow-light-light);
+}
+
+body:not(.light-mode) .card {
+  background-color: var(--card-bg-dark-mode);
+  border-color: rgba(255,255,255,0.1);
+}
+body.light-mode .card {
+  background-color: var(--card-bg-light-mode);
+  border-color: rgba(0,0,0,0.1);
+}
+/* Adjust text for contrast */
+body:not(.light-mode) .card span {
+  color: #eee;
+}
+body.light-mode .card span {
+  color: #222;
+}
+
+body.light-mode .slider-container,
+body.light-mode .slider-viewport {
+  background-color: var(--main-bg-color) !important;
+}
+/* Slider selector tabs */
+body.light-mode .slider-selector button {
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--line-color);
+}
+body.light-mode .slider-selector button:hover {
+  background-color: var(--toggle-bg-light-hover);
+}
+body.light-mode .slider-selector button.active {
+  background-color: var(--line-color);
+  color: var(--bg-color);
+}
+/* Arrows & dots in light mode should invert for contrast */
+body.light-mode .slider-btn {
+  background-color: var(--toggle-bg-light);
+  color: var(--text-color);
+}
+body.light-mode .slider-btn:hover {
+  background-color: var(--line-color);
+  color: var(--bg-color);
+}
+body.light-mode .slider-dots .dot {
+  background-color: #ccc;
+}
+body.light-mode .slider-dots .dot.active {
+  background-color: var(--line-color);
+}
+
+/* Base layout */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Pixelify Sans', sans-serif;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.no-select {
+  user-select: none;          /* Standard */
+  -webkit-user-select: none;  /* Chrome, Safari */
+  -moz-user-select: none;     /* Firefox */
+  -ms-user-select: none;      /* IE/Edge (old) */
+}
+.no-select-img {
+  user-select: none;              /* Prevent text/image selection */
+  -webkit-user-drag: none;        /* Prevent dragging in Chrome/Safari */
+  -webkit-user-select: none;      /* Safari */
+  -moz-user-select: none;         /* Firefox */
+  -ms-user-select: none;          /* Old IE/Edge */
+  pointer-events: none;           /* Optional: disables all mouse interaction */
+}
+
+
+/* Header */
+header {
+  position: relative;
+  flex: 0 0 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 2px solid var(--line-color);
+}
+
+/* Header left */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Dark/Light Mode Toggle */
+#theme-toggle {
+  background-color: var(--toggle-bg);
+  border: none;
+  border-radius: 50%;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+body.light-mode #theme-toggle {
+  background-color: var(--toggle-bg-light);
+}
+.color-palette-container {
+  position: relative;
+  margin-left: 0.25rem;
+}
+.color-palette-container:hover #color-palette-menu,
+.color-palette-container.open #color-palette-menu {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* palette toggle button */
+#color-palette-toggle {
+  background-color: var(--toggle-bg);
+  border: none;
+  border-radius: 50%;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+body.light-mode #color-palette-toggle {
+  background-color: var(--toggle-bg-light);
+}
+.color-palette-container:hover #color-palette-toggle,
+.color-palette-container.open #color-palette-toggle {
+  background-color: var(--toggle-bg-hover);
+  color: var(--line-color);
+}
+body.light-mode .color-palette-container:hover #color-palette-toggle,
+body.light-mode .color-palette-container.open #color-palette-toggle {
+  background-color: var(--toggle-bg-light-hover);
+}
+
+/* hidden menu of swatches, starts “up” and invisible */
+#color-palette-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--main-bg-color);
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 100;
+}
+
+/* when container has .open, slide it down & fade in */
+.color-palette-container.open #color-palette-menu {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Make the palette toggle button pop a bit on hover */
+  #color-palette-toggle {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+  #color-palette-toggle:hover {
+    transform: scale(1.1);
+    background-color: var(--toggle-bg-hover);
+  }
+
+  /* Give each swatch a subtle grow and border highlight */
+  .color-swatch {
+    transition: transform 0.2s ease, border-color 0.3s ease;
+  }
+  .color-swatch:hover {
+    transform: scale(1.2);
+    border-color: var(--line-color);
+  }
+  /* Dark/Light Toggle Hover */
+  #theme-toggle {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+  #theme-toggle:hover {
+    transform: scale(1.1);
+    background-color: var(--toggle-bg-hover);
+    color: var(--line-color);
+  }
+  body.light-mode #theme-toggle:hover {
+    background-color: var(--toggle-bg-light-hover);
+    color: var(--line-color);
+  }
+  .lang-switcher .lang {
+    transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+  .lang-switcher .lang:hover {
+    transform: scale(1.1);
+    background-color: var(--toggle-bg-hover);
+    color: var(--line-color);
+  }
+  body.light-mode .lang-switcher .lang:hover {
+    background-color: var(--toggle-bg-light-hover);
+    color: var(--line-color);
+  }
+
+  /* Social Icons Hover */
+  .footer-left a,
+  .footer-left button {
+    transition: transform 0.2s ease, color 0.3s ease;
+  }
+  .footer-left a:hover,
+  .footer-left button:hover {
+    transform: scale(1.1);
+    color: var(--line-color);
+  }
+}
+
+/* swatches */
+.color-swatch {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+.color-swatch.active { border-color: var(--text-color); }
+
+/* Language switcher */
+.lang-switcher {
+  display: flex;
+  background-color: var(--toggle-bg);
+  border-radius: 1.2rem;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+body.light-mode .lang-switcher { background-color: var(--toggle-bg-light); }
+.lang-switcher .lang {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.lang-switcher .divider {
+  width: 1px;
+  background-color: var(--line-color);
+  margin: 0.2rem 0;
+}
+.lang-switcher .lang.active { color: var(--line-color); }
+
+/* Desktop vs Mobile switchers */
+#lang-switcher-desktop { display: flex; }
+#lang-switcher-mobile  { display: none; }
+
+/* Header right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+#hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.4rem;
+  cursor: pointer;
+  position: relative; /* Ensure z-index works */
+  z-index: 1001; /* Above the overlay */
+}
+#nav-links {
+  display: flex;
+  gap: 1rem;
+}
+#nav-links .active { color: var(--line-color); }
+#nav-links a {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+#nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: var(--line-color);
+  transition: width 0.3s ease;
+}
+#nav-links a:hover { color: var(--line-color); }
+#nav-links a:hover::after { width: 100%; }
+
+/* Main content */
+.hidden { display: none !important; }
+
+main {
+  flex: 1 0 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden; /* ensure pixels don’t overflow out of the box */
+  background-color: var(--main-bg-color);
+}
+.main-title {
+  font-family: inherit;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  overflow: visible; /* Ensures jumping letters are not clipped */
+}
+.main-title .letter {
+  display: inline-block;
+  position: relative;
+  /* clip the accent color into the text */
+  background: var(--line-color);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* overlay fine horizontal lines */
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.15) 0px,
+      rgba(255,255,255,0.15) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  background-size: 100% 7px;
+  background-blend-mode: screen;
+}
+
+/* Jump animation when class 'jump' is added */
+@keyframes jump {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-10px); } /* Original value: -20px */
+  60%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+.main-title .letter.jump {
+  animation: jump 600ms ease;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;               /* sit above the typewriter */
+}
+/* Outer Gameboy shell */
+.gameboy {
+  width: 240px;
+  height: 360px;
+  margin: 0 auto;
+  background: #9da3a6;
+  border: 8px solid #7a7f82;
+  border-radius: 16px;
+  box-shadow: inset -4px -4px 0 #7a7f82, inset 4px 4px 0 #b0b5b8;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+/* Screen area: fixed size & cropping */
+.gameboy .screen {
+  width: 100%;
+  height: 200px;
+  background: #000; /* Dark background behind image */
+  border: 4px solid #7a7f82;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  
+  /* Inner shadow for depth */
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+/* The Profile Image */
+.gameboy .screen .profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+  /* Ensure image is fully visible */
+  opacity: 1; 
+  transition: none; /* Remove any hover transitions */
+}
+
+/* Ensure NO hover effects hide the image */
+.profile-container:hover .profile-img,
+.gameboy .screen:hover .profile-img {
+  opacity: 1 !important;
+}
+
+/* Ensure the container doesn't try to reveal a missing card */
+.profile-container:hover .profile-card {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Controls section */
+.gameboy .controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* D-Pad styling */
+.dpad {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: #7a7f82;
+  margin: 0 auto;
+}
+.dpad span {
+  position: absolute;
+  background: #ccd1cf;
+  box-shadow: inset -1px -1px 0 #7a7f82, inset 1px 1px 0 #eef0ee;
+}
+.dpad-up    { top: 0;    left: 20px; width: 20px; height: 12px; }
+.dpad-down  { bottom: 0; left: 20px; width: 20px; height: 12px; }
+.dpad-left  { left: 0;    top: 20px; width: 12px; height: 20px; }
+.dpad-right { right: 0;   top: 20px; width: 12px; height: 20px; }
+.dpad-center{ top: 20px;  left: 20px; width: 20px; height: 20px;
+             background: #7a7f82; }
+
+/* Action buttons A & B */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.btn-a,
+.btn-b {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #eb5e55;
+  box-shadow: inset -2px -2px 0 #a83b36, inset 2px 2px 0 #f78b86;
+}
+.btn-b {
+  background: #f3c34f;
+  box-shadow: inset -2px -2px 0 #a57d2a, inset 2px 2px 0 #f9d672;
+}
+
+/* Start and Select buttons */
+.start-select {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+.btn-select,
+.btn-start {
+  width: 36px;
+  height: 8px;
+  background: #7a7f82;
+  border-radius: 4px;
+  box-shadow: inset -1px -1px 0 #5d6163, inset 1px 1px 0 #a8abac;
+}
+
+.profile-container.open .profile-img {
+  opacity: 0;
+}
+.profile-container.open .profile-card {
+  opacity: 1;
+  pointer-events: auto;
+}
+.profile-container:hover .profile-img {
+  opacity: 0;
+}
+.profile-container:hover .profile-card {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none) and (pointer: coarse) {
+  .profile-container:hover .profile-img,
+  .profile-container:hover .profile-card {
+    /* disable hover styles on touch devices */
+    opacity: initial;
+    pointer-events: none;
+  }
+}
+
+/* Typewriter tweaks */
+#typewriter {
+  border: none;
+}
+.typewriter-container {
+  margin: .75rem 0 0;
+  z-index: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;    /* center the typewriter */
+  width: 100%;
+  }
+.cursor {
+  display: inline-block;
+  animation: blink 0.5s step-end infinite;
+}
+.cursor::before {
+  content: '|';
+  color: var(--line-color);
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* the transparent container for our pixels */
+#pixel-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; /* so it never blocks clicks */
+  z-index: 0 !important; /* ensure overlay sits below the actual content */
+}
+
+/* each generated “pixel” */
+.pixel-square {
+  position: absolute;
+  background: var(--line-color);
+  /* clip the accent color into the “pixel” and overlay the same fine horizontal lines as the main title */
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.15) 0px,
+      rgba(255,255,255,0.15) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  background-size: 100% 7px;
+  background-blend-mode: screen;
+
+  opacity: 0;
+  animation: pixel-fade 1s ease-in-out forwards;
+
+  /* slight rounding to soften the corners */
+  border-radius: 2px;
+}
+
+@keyframes pixel-fade {
+  0%   { opacity: 0; transform: scale(1); }
+  20%  { opacity: 0.5; transform: scale(1.2); }
+  80%  { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1); }
+}
+/* Icon variant of our pixel elements */
+.pixel-icon {
+  position: absolute;
+  color: var(--line-color);
+  opacity: 0;
+  animation: pixel-fade 0.5s ease-in-out forwards;
+  /* reenforce FA glyphs to render at the correct size */
+  display: inline-block;
+  line-height: 1;
+}
+
+/* reuse the same fade/scale keyframes defined for pixel-square */
+@keyframes pixel-fade {
+  0%   { opacity: 0;   transform: scale(1); }
+  20%  { opacity: 0.5; transform: scale(1.2); }
+  80%  { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1); }
+}
+
+#home-section,
+#about-section,
+#projects-section {
+  position: relative;
+  z-index: 1;
+}
+
+#about-section {
+  padding: 2rem;
+  color: var(--text-color);
+}
+
+/* match the Projects header style */
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--line-color);
+  text-align: center;
+}
+
+/* match the Projects description style */
+.section-description {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .section-description {
+    margin: 0px 2rem 2rem;
+  }
+}
+
+.slider-selector {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* ─── Fill-bar keyframes ─── */
+@keyframes slider-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+@keyframes slider-unfill {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ─── Base tab button styling ─── */
+.slider-selector button {
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;          /* Pixelify Sans */
+  font-weight: 600;
+  background: var(--slider-btn-bg);
+  color: var(--slider-btn-color);
+  border: 1px solid var(--line-color);
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+/* ─── The fill bar behind the text ─── */
+.slider-selector button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 0%;
+  height: 100%;
+  background: var(--line-color);
+  z-index: -1;
+}
+
+/* ─── Hover-in: grow the fill bar ─── */
+.slider-selector button:hover::before {
+  animation: slider-fill 0.4s forwards ease-in-out;
+}
+
+/* ─── Hover-out: shrink the fill bar ─── */
+.slider-selector button:not(:hover)::before {
+  animation: slider-unfill 0.4s forwards ease-in-out;
+}
+
+/* ─── Active tab stays filled without animation ─── */
+.slider-selector button.active::before {
+  width: 100%;
+  animation: none;
+}
+
+/* ─── Invert text when covered by fill ─── */
+.slider-selector button:hover,
+.slider-selector button.active {
+  color: var(--bg-color);
+}
+
+/* ─── Disable “slider-unfill” when .disable-unfill is on the wrapper ─── */
+.slider-selector.disable-unfill button::before {
+  /* no keyframes of any kind */
+  animation: none !important;
+}
+
+.slider-container {
+  position: relative;
+  padding: 0 var(--margin-desktop);
+  margin-bottom: 48px;
+}
+
+.slider-viewport {
+  position: relative;      /* containing block for absolutely positioned arrows */
+  overflow: hidden;
+  width: var(--viewport-width);
+  margin: 0 auto;
+}
+
+.slider-container,
+.slider-viewport {
+  background: var(--slider-bg);
+}
+
+.slider-track {
+  display: flex;
+  gap: var(--gap-desktop);
+  transition: transform var(--transition-speed) ease;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  /* init the CSS vars */
+  --mask-x: 50%;
+  --mask-y: 50%;
+  --mask-size: 0px;
+  /* fixed square on desktop */
+  flex: 0 0 var(--card-width-desktop);
+  width: var(--card-width-desktop);
+  height: var(--card-width-desktop);
+
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--toggle-bg-hover);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  padding: 18px 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  /* clip to a circle of radius var(--mask-size) at (-mask-x, --mask-y) */
+  clip-path: circle(var(--mask-size) at var(--mask-x) var(--mask-y));
+  transition: clip-path 0.1s ease-out;
+}
+
+.card i {
+  color: var(--line-color);
+  font-size: var(--card-icon-size);
+  margin-bottom: 0.5rem;
+}
+
+.card img {
+  display: block !important;
+  width: 48px !important;
+  height: 48px !important;
+  object-fit: contain;
+}
+
+.card span {
+  margin-top: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--slider-btn-bg);
+  color: var(--slider-btn-color);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.85;
+  transition: background 0.2s, color 0.2s;
+  z-index: 10;
+}
+
+.slider-btn.left {
+  left: calc(
+    50% - (var(--viewport-width) / 2)
+    - var(--arrow-offset-desktop)
+  );
+}
+
+.slider-btn.right {
+  right: calc(
+    50% - (var(--viewport-width) / 2)
+    - var(--arrow-offset-desktop)
+  );
+}
+
+.slider-btn:hover {
+  background: var(--slider-btn-hover-bg);
+  color: var(--slider-btn-hover-color);
+}
+
+/* ── Desktop: center arrows and give them extra horizontal offset ── */
+@media (min-width: 768px) {
+  .slider-btn.left,
+  .slider-btn.right {
+    /* ensure they’re centered vertically on the track */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* increase the distance from the cards by bumping the offset */
+  .slider-btn.left {
+    left: calc(
+      50% 
+      - (var(--viewport-width) / 2) 
+      - 60px    /* <-- 60px instead of the default 40px */
+    );
+  }
+  .slider-btn.right {
+    right: calc(
+      50% 
+      - (var(--viewport-width) / 2) 
+      - 60px    /* <-- match the same extra space on the right */
+    );
+  }
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--dot-gap-desktop);
+  margin-top: 1.2rem;
+}
+
+.slider-dots .dot {
+  /* ensure a perfect circle, no flattening */
+  flex: none;
+  display: inline-block;
+  width: var(--dot-size-desktop);
+  height: var(--dot-size-desktop);
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  background: var(--slider-dot-color);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slider-dots .dot.active {
+  background: var(--slider-dot-active-color);
+}
+
+@media (max-width: 600px) {
+  .slider-container {
+    padding: 0;
+  }
+
+  .slider-viewport {
+    /* mobile: fit 3 cards + 2 gaps */
+    width: 100vw;
+    max-width: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .slider-track {
+    display: flex;
+    gap: var(--gap-mobile);
+    padding: 0 var(--gap-mobile); /* ADD PADDING HERE */
+  }
+
+  .card {
+    /* mobile: 3-per-row, using same desktop width or override if desired */
+    flex: 0 0 calc((100vw - 4 * var(--gap-mobile)) / 3);
+    max-width: calc((100vw - 4 * var(--gap-mobile)) / 3);
+    height: auto;
+    padding: 12px 4px;
+  }
+
+  .card span {
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+
+  .slider-btn {
+    display: none;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--dot-gap-mobile);
+    margin-top: 1rem;
+  }
+
+  .slider-dots .dot {
+    width: var(--dot-size-mobile);
+    height: var(--dot-size-mobile);
+    border-radius: 50%;
+  }
+}
+
+/* ─── Projects Section & Cards ─── */
+/* ─── Projects Section & Cards ─── */
+#projects-section {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+#projects-section .section-title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--line-color);
+}
+#projects-section .projects-grid {
+  gap: 2rem;
+}
+
+#projects-section .project-card {
+  padding-bottom: 0%;
+  /* CHANGED: Increased height to 300px to balance the wider width */
+  height: 300px;
+}
+#projects-section .project-card img {
+  height: 100%;
+}
+
+/* ─── Projects Section & Cards ─── */
+#projects-section {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+#projects-section .section-title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--line-color);
+}
+
+/* Base Card Styles */
+#projects-section .project-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--main-bg-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4), -2px -2px 4px rgba(255,255,255,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 300px; /* Default desktop height */
+}
+
+#projects-section .project-card .img-container {
+  width: 100%;
+  height: 100%;
+}
+#projects-section .project-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease;
+}
+
+/* ─── DESKTOP CONFIGURATION (Grid + Hover) ─── */
+@media (min-width: 601px) {
+  /* Force Grid Layout, ignoring slider flexbox */
+  .projects-slider .slider-track.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    width: 90vw;
+    max-width: 1400px;
+    margin: 0 auto;
+    transform: none !important; /* Disable slider movement */
+  }
+  
+  /* Hide slider dots on desktop */
+  .projects-slider .slider-dots {
+    display: none !important;
+  }
+  
+  /* Allow overflow on desktop so shadows/transforms aren't clipped */
+  .projects-slider .slider-viewport {
+    overflow: visible;
+    width: auto;
+  }
+
+  /* Hover Effects */
+  #projects-section .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.4), -2px -2px 4px rgba(255,255,255,0.1);
+  }
+  #projects-section .project-card:hover img {
+    filter: brightness(1);
+  }
+
+  /* Description Overlay (Hidden by default, shown on hover) */
+  .project-desc {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 1rem;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  #projects-section .project-card:hover .project-desc {
+    opacity: 1;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 601px) and (max-width: 900px) {
+  .projects-slider .slider-track.projects-grid {
+    width: 95vw;
+  }
+}
+
+
+/* ─── MOBILE CONFIGURATION (Slider + No Hover) ─── */
+@media (max-width: 600px) {
+  /* Slider Container */
+  .projects-slider {
+    width: 100vw;
+    margin-left: -1rem; /* Counteract parent padding to go full width */
+    margin-right: -1rem;
+    padding-bottom: 2rem;
+  }
+
+  .projects-slider .slider-viewport {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  /* Force Flex Layout for Slider */
+  .projects-slider .slider-track {
+    display: flex;
+    gap: 0; 
+    width: fit-content;
+    
+    /* FIX: Remove the generic slider-track padding so it centers perfectly */
+    padding: 0 !important; 
+    margin: 0;
+  }
+
+  /* Card Styling for Slider */
+  #projects-section .project-card {
+    height: auto !important; /* Let content dictate height */
+    transform: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border-radius: 0;
+    
+    /* 100% width of the viewport */
+    flex: 0 0 100vw;
+    width: 100vw;
+    padding: 0 2rem; /* Spacing on sides */
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Image Area */
+  #projects-section .project-card .img-container {
+    width: 100%;
+    height: 200px; /* Fixed height for image */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+  }
+
+  #projects-section .project-card img {
+    filter: brightness(1); /* No dimming */
+  }
+
+  /* Description: Visible text below image */
+  .project-desc {
+    position: static; /* No longer absolute */
+    opacity: 1;
+    background: transparent;
+    color: var(--text-color);
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: auto;
+  }
+
+  /* Dots */
+  .projects-slider .slider-dots {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+/* "Coming Soon" Text */
+.coming-soon-text {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+/* Footer */
+footer {
+  flex: 0 0 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-top: 2px solid var(--line-color);
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.footer-left a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.footer-left a,
+.footer-left button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.footer-left a:hover,
+.footer-left button:hover {
+  color: var(--line-color);
+}
+.footer-right {
+  font-size: 0.9rem;
+}
+
+/* CV Preview Modal */
+.cv-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+.cv-modal.show {
+  display: flex;
+}
+.cv-modal-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  background: var(--main-bg-color);
+  border-radius: 8px;
+  overflow: auto;
+}
+#cv-close {
+  position: absolute;
+  top: 42px; right: 24px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-color);
+  cursor: pointer;
+  z-index: 2010;
+}
+#cv-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Responsive (mobile) */
+@media (max-width: 600px) {
+  #lang-switcher-desktop { display: none; }
+  #lang-switcher-mobile  { display: flex; }
+  #hamburger             { display: block; }
+  .header-right          { gap: 1rem; }
+
+  #nav-links {
+    position: fixed;
+    top: 10vh;
+    right: 0;
+    width: 45%;
+    height: auto;
+    background-color: var(--main-bg-color);
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0;
+    border: 1px solid var(--line-color);
+    border-right: none;
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+    gap: 0;
+    z-index: 1000;
+    overflow: hidden;
+  }
+  #nav-links.show {
+    transform: translateX(0);
+  }
+  #nav-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px; /* Set a fixed height for all buttons */
+    padding: 0 1rem; /* Remove vertical padding, keep horizontal */
+    font-size: 1.1rem;
+    border: none; /* Remove individual borders */
+    border-bottom: 1px solid var(--line-color);
+  }
+  #nav-links a:last-child {
+    border-bottom: none; /* Keep the last item without a border */
+  }
+
+  #menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Below the menu, above everything else */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #menu-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 600px) {
+    /* For the active/selected link, hide the “stronger” underline (e.g. pseudo-element)
+       but preserve the default thin divider line (border-bottom). */
+    #nav-links a.selected,
+    #nav-links a.active {
+      /* Ensure the normal 1px divider is still shown */
+      border-bottom: 1px solid var(--line-color) !important;
+    }
+  
+    /* If you have a pseudo-element adding that stronger underline, hide only it */
+    #nav-links a.selected::after,
+    #nav-links a.active::after {
+      display: none !important;
+      content: none !important;
+    }
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+  .footer-left {
+    justify-content: center;
+  }
+  .footer-right {
+    order: 2;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+/* ── Icon-only Hover for Theme Toggle ── */
+#theme-toggle:hover {
+  background-color: var(--toggle-bg-hover);
+}
+#theme-toggle:hover #theme-icon {
+  color: var(--line-color);
+}
+body.light-mode #theme-toggle:hover {
+  background-color: var(--toggle-bg-light-hover);
+}
+body.light-mode #theme-toggle:hover #theme-icon {
+  color: var(--line-color);
+}
+
+/* ── Smooth Background & Text Hover for Lang Switcher ── */
+.lang-switcher .lang {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.lang-switcher .lang:hover {
+  background-color: var(--toggle-bg-hover);
+  color: var(--line-color);
+}
+body.light-mode .lang-switcher .lang:hover {
+  background-color: var(--toggle-bg-light-hover);
+  color: var(--line-color);
+}
+
+.main-title,
+.profile-container,
+.typewriter-container {
+  position: relative; /* establish a stacking context */
+  z-index: 3;         /* sit above the pixel-overlay */
+}
+
+/* Pixelated Sparkle */
+.sparkle {
+  position: absolute;
+  width: 2px;                /* even smaller pixel dots */
+  height: 2px;               /* maintain square shape */
+  background: var(--line-color);
+  border-radius: 0;          /* hard edges */
+  box-shadow: none;          /* no blur or glow */
+  image-rendering: pixelated;/* crisp nearest-neighbor rendering */
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes sparkle-fade {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOutLeft {
+  0%   { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-20px); }
+}
+@keyframes fadeInLeft {
+  0%   { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* helper classes to trigger the animation */
+.fade-out-left {
+  animation: fadeOutLeft 0.2s ease forwards;
+}
+.fade-in-left {
+  animation: fadeInLeft 0.2s ease forwards;
+}

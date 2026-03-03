@@ -7,7 +7,7 @@
   box-sizing: border-box;
 }
 html, body {
-  height: 100%;
+  height: 100svh; /* height: 100%; */
   overflow: hidden; /* keep page un-scrollable */
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -1246,6 +1246,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  padding-bottom: env(safe-area-inset-bottom, 0);
   border-top: 2px solid var(--line-color);
 }
 .footer-left {

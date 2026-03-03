@@ -20,18 +20,14 @@ function getCurrentSection() {
   );
 }
 
-/**
- * returns the nav link that currently has .active
- */
+ // returns the nav link that currently has .active
 function getCurrentNavLink() {
   return [navHome, navAbout, navProjects].find((link) =>
     link.classList.contains("active")
   );
 }
 
-/**
- * Show targetSection by fading out whatever is visible now
- */
+ // Show targetSection by fading out whatever is visible now
 function showSection(targetSection, targetNavLink) {
   const fromSection = getCurrentSection();
   const fromNav = getCurrentNavLink();
@@ -77,7 +73,7 @@ function showSection(targetSection, targetNavLink) {
         tabWrapper.addEventListener("mouseenter", liftSuppression);
       }
       
-      // REFRESH SLIDERS when entering their section
+      // Refresh sliders when entering their section
       if (targetSection.id === "about-section") {
          if (window.sliderLanguages) window.sliderLanguages.refresh();
          if (window.sliderSoftware) window.sliderSoftware.refresh();
@@ -407,7 +403,7 @@ document.querySelectorAll("#nav-links a").forEach((link) => {
   });
 });
 
-/* ── CV Preview Modal ── */
+// ── CV Preview Modal ── //
 const cvBtn = document.getElementById("cv-preview-footer");
 const cvModal = document.getElementById("cv-modal");
 const cvClose = document.getElementById("cv-close");
@@ -440,7 +436,7 @@ cvModal.addEventListener("click", (e) => {
   }
 });
 
-// ── PIXEL-ART SQUARE & ICON GENERATOR ──
+// ── PIXEL-ART SQUARE & ICON GENERATOR ── //
 (function pixelArt() {
   const overlay = document.getElementById("pixel-overlay");
   const MAX_PARTICLES = 50; 

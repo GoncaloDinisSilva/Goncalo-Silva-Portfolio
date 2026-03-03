@@ -122,6 +122,47 @@ themeToggle.addEventListener("click", () => {
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
 
+// ── Detect and adjust for Android navigation bar ──
+function adjustForMobileNavBar() {
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isChrome = /Chrome/i.test(navigator.userAgent);
+  
+  if (!isAndroid || !isChrome) return; // Only apply on Android Chrome
+  
+  // Get the actual viewport height (minus nav bar)
+  const visualViewport = window.visualViewport;
+  
+  if (visualViewport) {
+    function updateHeight() {
+      const viewportHeight = visualViewport.height;
+      document.documentElement.style.setProperty('--viewport-height', `${viewportHeight}px`);
+      
+      // Apply to body
+      document.body.style.height = `${viewportHeight}px`;
+      
+      // Get header and footer actual pixel heights
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      
+      const headerHeight = header ? header.offsetHeight : 0;
+      const footerHeight = footer ? footer.offsetHeight : 0;
+      
+      // Apply main height: viewport - header - footer
+      const main = document.querySelector('main');
+      if (main) {
+        main.style.height = `${viewportHeight - headerHeight - footerHeight}px`;
+      }
+    }
+    
+    visualViewport.addEventListener('resize', updateHeight);
+    updateHeight(); // Run on load
+  }
+}
+
+// Run on load and on orientation change
+window.addEventListener('load', adjustForMobileNavBar);
+window.addEventListener('orientationchange', adjustForMobileNavBar);
+
 // ── Accent‐Color Palette ── //
 (function () {
   const defaultAccent = "#007bff";

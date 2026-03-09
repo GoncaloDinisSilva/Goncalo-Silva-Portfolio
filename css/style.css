@@ -7,8 +7,7 @@
   box-sizing: border-box;
 }
 html, body {
-  height: var(--viewport-height, 100vh);
-  height: 100dvh; /* fallback */
+  height: 100%;
   overflow: hidden; /* keep page un-scrollable */
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -151,8 +150,11 @@ body.light-mode .slider-dots .dot.active {
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  display: flex;
-  flex-direction: column;
+  margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: 10% 80% 10%;
   font-family: 'Pixelify Sans', sans-serif;
   image-rendering: pixelated;
   -webkit-font-smoothing: none;
@@ -177,8 +179,6 @@ body {
 
 /* Header */
 header {
-  position: relative;
-  flex: 0 0 10vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -423,13 +423,11 @@ body.light-mode .lang-switcher { background-color: var(--toggle-bg-light); }
 .hidden { display: none !important; }
 
 main {
-  flex: 1 0 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden; /* ensure pixels don’t overflow out of the box */
+  overflow: hidden;
   background-color: var(--main-bg-color);
 }
 .main-title {
@@ -1242,7 +1240,6 @@ main {
 
 /* Footer */
 footer {
-  flex: 0 0 10vh;
   display: flex;
   align-items: center;
   justify-content: space-between;

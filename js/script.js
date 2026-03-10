@@ -20,14 +20,18 @@ function getCurrentSection() {
   );
 }
 
- // returns the nav link that currently has .active
+/**
+ * returns the nav link that currently has .active
+ */
 function getCurrentNavLink() {
   return [navHome, navAbout, navProjects].find((link) =>
     link.classList.contains("active")
   );
 }
 
- // Show targetSection by fading out whatever is visible now
+/**
+ * Show targetSection by fading out whatever is visible now
+ */
 function showSection(targetSection, targetNavLink) {
   const fromSection = getCurrentSection();
   const fromNav = getCurrentNavLink();
@@ -73,7 +77,7 @@ function showSection(targetSection, targetNavLink) {
         tabWrapper.addEventListener("mouseenter", liftSuppression);
       }
       
-      // Refresh sliders when entering their section
+      // REFRESH SLIDERS when entering their section
       if (targetSection.id === "about-section") {
          if (window.sliderLanguages) window.sliderLanguages.refresh();
          if (window.sliderSoftware) window.sliderSoftware.refresh();
@@ -121,47 +125,6 @@ themeToggle.addEventListener("click", () => {
   themeIcon.classList.toggle("fa-sun", isLight);
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
-
-// ── Detect and adjust for Android navigation bar ──
-function adjustForMobileNavBar() {
-  const isAndroid = /Android/i.test(navigator.userAgent);
-  const isChrome = /Chrome/i.test(navigator.userAgent);
-  
-  if (!isAndroid || !isChrome) return; // Only apply on Android Chrome
-  
-  // Get the actual viewport height (minus nav bar)
-  const visualViewport = window.visualViewport;
-  
-  if (visualViewport) {
-    function updateHeight() {
-      const viewportHeight = visualViewport.height;
-      document.documentElement.style.setProperty('--viewport-height', `${viewportHeight}px`);
-      
-      // Apply to body
-      document.body.style.height = `${viewportHeight}px`;
-      
-      // Get header and footer actual pixel heights
-      const header = document.querySelector('header');
-      const footer = document.querySelector('footer');
-      
-      const headerHeight = header ? header.offsetHeight : 0;
-      const footerHeight = footer ? footer.offsetHeight : 0;
-      
-      // Apply main height: viewport - header - footer
-      const main = document.querySelector('main');
-      if (main) {
-        main.style.height = `${viewportHeight - headerHeight - footerHeight}px`;
-      }
-    }
-    
-    visualViewport.addEventListener('resize', updateHeight);
-    updateHeight(); // Run on load
-  }
-}
-
-// Run on load and on orientation change
-window.addEventListener('load', adjustForMobileNavBar);
-window.addEventListener('orientationchange', adjustForMobileNavBar);
 
 // ── Accent‐Color Palette ── //
 (function () {
@@ -236,7 +199,7 @@ const translations = {
     ],
     "about.heading": "About Me",
     "about.description":
-      "Hi, I'm Gonçalo! I'm a web content editor and developer who loves crafting responsive, user-interactive experiences. I'm passionate about clean and modern design, scalable code and learning new tools!",
+      "Hi, I'm Gonçalo! I'm a Web Content Editor and Web Developer who loves crafting responsive, user-interactive experiences. I'm passionate about clean and modern designs, scalable code and learning new tools!",
     "slider.languages": "Languages",
     "slider.softwares": "Softwares",
     "projects.title": "My Projects",
@@ -259,7 +222,7 @@ const translations = {
     ],
     "about.heading": "Sobre Mim",
     "about.description":
-      "Olá, sou o Gonçalo! Sou um editor de conteúdo web e desenvolvedor que adora criar experiências responsivas e interativas com o utilizador. Sou apaixonado um design simples e moderno, código escalável e aprender novas ferramentas!",
+      "Olá, sou o Gonçalo! Sou um editor de conteúdo web e desenvolvedor de websites que adora criar experiências responsivas e interativas com o utilizador. Sou apaixonado por designs simples e modernos, código escalável e por aprender novas ferramentas!",
     "slider.languages": "Linguagens",
     "slider.softwares": "Programas",
     "projects.title": "Os Meus Projetos",
@@ -444,7 +407,7 @@ document.querySelectorAll("#nav-links a").forEach((link) => {
   });
 });
 
-// ── CV Preview Modal ── //
+/* ── CV Preview Modal ── */
 const cvBtn = document.getElementById("cv-preview-footer");
 const cvModal = document.getElementById("cv-modal");
 const cvClose = document.getElementById("cv-close");
@@ -477,7 +440,7 @@ cvModal.addEventListener("click", (e) => {
   }
 });
 
-// ── PIXEL-ART SQUARE & ICON GENERATOR ── //
+// ── PIXEL-ART SQUARE & ICON GENERATOR ──
 (function pixelArt() {
   const overlay = document.getElementById("pixel-overlay");
   const MAX_PARTICLES = 50; 
